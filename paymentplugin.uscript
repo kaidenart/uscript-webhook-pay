@@ -1,0 +1,39 @@
+/*
+Made by KaidenArt
+https://www.kaiden.art
+https://www.github.com/kaidenart
+*/
+
+// Webhook URL
+configwebhookurl = "https://ptb.discord.com/api/webhooks/1229559104918257725/LG_WHiIVmD5KCtEOHbpFX0z8qVsuEuWa4tvyEqJKZy2BTtLlqDQoA6SdltcXp0x5xC15";
+
+// Pay Command
+command pay(argPlayer, amt){
+    permission = KaidensPayment.pay;
+    allowedCaller = "player";
+    execute(){
+        if(argPlayer == null)
+            return player.message("Player Name Required", "red");
+        refPlayer = argPlayer != null ? toPlayer(argPlayer) : player;
+		if(refPlayer == null)
+			return player.message("Player Not Found", "red");
+        if(refPlayer.name == player.name)
+            return player.message("Cannot Pay Yourself", "red");
+        if(amt == null)
+            return player.message("Amount Required", "red");
+        if(amt.toNumber() == null)
+            return player.message("Amount Required", "red");
+        if(amt.toNumber() > player.experience)
+            return player.message("Insufficient Funds", "red");
+        argPlayer = toPlayer(argPlayer);
+        argPlayer.experience += amt.toNumber();
+        player.experience -= amt.toNumber();
+        embed = discordEmbed();
+            embed.title = "$" + amt;
+            embed.description = player.name + " ---> " + refPlayer.name;
+            embed.footer.text = player.id + " ---> " + refPlayer.id;
+            embed.color = 16776960;
+        discord.sendEmbed(configwebhookurl, embed);
+        return player.message("<color=yellow>" + refPlayer.name + "</color> Successfully Paid!", "green");
+    };
+};
